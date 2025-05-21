@@ -103,7 +103,7 @@
                     </TextBlock>
 
                     <StackPanel Orientation="Horizontal">
-                        <Button Margin="0,0,20,0" Style="{DynamicResource AccentButtonStyle}" Command="{Binding Buy}">
+                        <Button Margin="0,0,20,0" Style="{DynamicResource AccentButtonStyle}" IsEnabled="{Binding BtnBlock}" Command="{Binding Buy}">
                             <Button.Content>
                                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Price}" />
                             </Button.Content>

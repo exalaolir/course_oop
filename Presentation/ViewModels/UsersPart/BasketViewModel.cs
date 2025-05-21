@@ -59,7 +59,13 @@ namespace course_oop.Presentation.ViewModels.UsersPart
             Card = new CardViewModel(product, null, productImages);
             Path = productImages.First().Path;
 
-            _validFields = new bool[1];
+            _validFields = new bool[2];
+
+            if (_product.Count > 0)
+            {
+                _validFields[1] = true;
+                OnPropertyChanged(nameof(IsButtonEnabled));
+            }
 
             Delete = new Command<BasketCardViewModel>(item => actions[0].Invoke(item));
             Watch = new Command<BasketCardViewModel>(i => actions[1].Invoke(i));

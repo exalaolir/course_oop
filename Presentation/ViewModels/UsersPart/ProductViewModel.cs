@@ -118,6 +118,17 @@ namespace course_oop.Presentation.ViewModels.UsersPart
             set => SetValue(ref _basketText, value);
         }
 
+        private bool _btnBlock;
+
+        public bool BtnBlock
+        {
+            get => _btnBlock;
+            set
+            {
+                SetValue(ref _btnBlock, value);
+            }
+        }
+
         public ProductViewModel(CardViewModel cardViewModel, User user)
         {
             _product = cardViewModel._product;
@@ -136,6 +147,7 @@ namespace course_oop.Presentation.ViewModels.UsersPart
                 .Where(o => o.UserId == _user.Id && o.ProductId == _product.Id && o.Status == OrderStatus.InCart)
                 .FirstOrDefault();
 
+            if(_product.Count > 0) BtnBlock = true;
 
             if (_order == null) _basketText = "В корзину";
             else _basketText = "Из корзины";
