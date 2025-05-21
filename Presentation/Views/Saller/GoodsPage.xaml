@@ -1,0 +1,81 @@
+﻿<Page
+    x:Class="course_oop.Presentation.Views.Saller.GoodsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:course_oop.Presentation.ViewModels.Components"
+    xmlns:converters="clr-namespace:course_oop.Presentation.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entities="clr-namespace:course_oop.Core.Entities"
+    xmlns:local="clr-namespace:course_oop.Presentation.Views.Saller"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sallerspart="clr-namespace:course_oop.Presentation.ViewModels.SallersPart"
+    Title="GoodsPage"
+    d:DataContext="{d:DesignInstance Type=sallerspart:GoodsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Style="{StaticResource BaseFluentPageStyle}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:BoolToVisibleConverter x:Key="BoolToVisibleConverter" />
+        <converters:InverseBoolToVisibleConverter x:Key="InverseBoolToVisibleConverter" />
+    </Page.Resources>
+
+    <Grid>
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Для редактирования каталога создайте магазин"
+            Visibility="{Binding IsEditable, Converter={StaticResource InverseBoolToVisibleConverter}}" />
+
+        <DockPanel LastChildFill="True"
+                   Visibility="{Binding IsEditable, Converter={StaticResource BoolToVisibleConverter}}">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Command="{Binding CreateNewPage}" Header="Добавить" />
+            </Menu>
+
+            <ScrollViewer>
+                <ItemsControl Margin="10" ItemsSource="{Binding Products}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type entities:Product}">
+                            <Border
+                                Margin="0,0,0,10"
+                                Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+                                BorderThickness="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="10"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Name}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="0,10,10,10"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding DataContext.CreatePage, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Происмотр и изменение" />
+                                    <Button
+                                        Style="{DynamicResource AccentButtonStyle}"
+                                        Grid.Column="2"
+                                        Margin="0,10,10,10"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding DataContext.DeleteProduct, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Удалить" />
+                                </Grid>
+                            </Border>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Page>

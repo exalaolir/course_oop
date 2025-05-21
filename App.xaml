@@ -1,0 +1,22 @@
+﻿<Application x:Class="course_oop.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pu="https://opensource.panuon.com/wpf-ui"
+             xmlns:local="clr-namespace:course_oop"
+             StartupUri="Presentation/Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary
+                    Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+
+                <ResourceDictionary Source="/Shared/res/Styles/WindowStyles.xaml" />
+
+                <ResourceDictionary Source="/Shared/res/Styles/ImageCardStyle.xaml" />
+
+                <pu:StyleDictionary Includes="None" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
