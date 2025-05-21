@@ -100,6 +100,7 @@ namespace course_oop.Presentation.ViewModels.UsersPart
                 SetValue(ref _mark, value);
                 _validFields[1] = true;
                 _isMarkSey = true;
+                MarkDescription = MarkDescription;
                 OnPropertyChanged(nameof(IsButtonEnabled));
             }
         }
@@ -152,7 +153,15 @@ namespace course_oop.Presentation.ViewModels.UsersPart
             if (_order == null) _basketText = "В корзину";
             else _basketText = "Из корзины";
 
-            _validFields = new bool[2];
+            _validFields = new bool[3];
+
+            var oldOrder = context.Orders.FirstOrDefault(o => o.UserId == _user.Id && o.ProductId == _product.Id && o.Status == OrderStatus.Delivered);
+
+            if (oldOrder != null)
+            {
+                _validFields[2] = true;
+                OnPropertyChanged(nameof(IsButtonEnabled)); 
+            }
 
             SetMark = new Command(() =>
             {
@@ -174,7 +183,9 @@ namespace course_oop.Presentation.ViewModels.UsersPart
                 };
 
                 context.Rewiews.Add(review);
-                context.Products.Find(_product.Id)!.Mark = context.Rewiews.Average(r => r.Rating);
+                context.SaveChanges();
+                var rewiews = context.Rewiews.Where(r => r.ProductId == _product.Id).ToList();
+                context.Products.Find(_product.Id)!.Mark = rewiews.Average(r => r.Rating);
                 _cardViewModel._product = context.Products.Find(_product.Id)!;
                 context.SaveChanges();
 
