@@ -163,7 +163,9 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                     context.Shops.Remove(shop);
 
                context.Sallers.Where(s => s.CategoryId == category.Id)
-                .ExecuteUpdate(s => s.SetProperty(s => s.Banned, true));
+                .ExecuteUpdate(s => s.SetProperty(s => s.Banned, true)
+                  .SetProperty(s => s.CategoryId, (int?)null)
+                  );
 
                 context.Categories.Remove(context.Categories.Find(category.Id)!);
 
@@ -183,7 +185,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                     root.Children.Remove(category);
                     using Repo repo = new();
 
-                    using AppContext context = appcontext == null ? new() : appcontext;
+                    AppContext context = appcontext == null ? new() : appcontext;
                     var removedCategory = context.Categories.Find(category.Id)!;
 
 
@@ -228,6 +230,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
 
                     ChangeCollection(repo.GetCategories().Cast<Category>().Where(c => c.ParentId == null));
 
+                    if(appcontext == null) context.Dispose();
                     break;
                 }
             }
