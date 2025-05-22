@@ -35,7 +35,7 @@ namespace course_oop.Infrastructure.Data.Repositories
 
         internal IEnumerable GetNotBannedUsers() => _appContext.Users.Where(e => !e.Banned);
 
-        internal IEnumerable GetVishedSealers() => _appContext.Sallers.Where(e => e.Vished);
+        internal IEnumerable GetVishedSealers() => _appContext.Sallers.Where(e => e.Vished && !e.Banned);
 
         internal IEnumerable GetCouriers() => _appContext.Couriers;
 
