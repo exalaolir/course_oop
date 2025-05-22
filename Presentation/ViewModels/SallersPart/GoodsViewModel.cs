@@ -12,6 +12,7 @@ using course_oop.Presentation.ViewModels.Base;
 using course_oop.Presentation.ViewModels.Commands;
 using course_oop.Presentation.ViewModels.Components;
 using course_oop.Presentation.Views.Saller;
+using Microsoft.EntityFrameworkCore;
 
 namespace course_oop.Presentation.ViewModels.SallersPart
 {
@@ -63,9 +64,49 @@ namespace course_oop.Presentation.ViewModels.SallersPart
 
                 DeleteProduct = new Command<Product>(p =>
                 {
-                    using Repo repo = new();
+                  
                     Products.Remove(p);
-                    repo.RemoveProduct(p.Id);
+                    using AppContext context = new AppContext();
+
+
+
+                    List<int?> nums = [];
+
+                    context.Orders.Where(o => o.Product!.Id == p.Id).ToList().ForEach(i => nums.Add(i.CourierId));
+
+
+                    context.Orders.Where(o => o.Product!.Id == p.Id)
+                    .ExecuteUpdate(o => o
+                        .SetProperty(x => x.Status, OrderStatus.Rejected)
+                        .SetProperty(x => x.CourierId, (int?)null)
+                      );
+
+                    double weight = (double)context.Products.Where(p => p.Id == p.Id).Sum(p => p.Weight);
+
+                    context.Couriers.Where(p => nums.Contains(p.Id))
+                        .ExecuteUpdate(c => c.
+                        SetProperty(c => c.SallerMinutes, (int?)null)
+                        .SetProperty(c => c.UserMinutes, (int?)null)
+                        .SetProperty(c => c.CurrentWeight, c => c.CurrentWeight - weight)
+                        .SetProperty(c => c.IsWork, false));
+
+                    var productsInCategory = context.Products
+                        .Where(z => z.Id == p.Id)
+                        .Include(z => z.Reviews) // Важно: подгружаем отзывы
+                        .ToList();
+
+                    // Собираем ВСЕ отзывы этих продуктов в один список
+                    var allReviewsToDelete = productsInCategory
+                        .SelectMany(p => p.Reviews) // "Разворачиваем" коллекции отзывов
+                        .ToList();
+
+                    // Удаляем все отзывы разом
+                    context.Rewiews.RemoveRange(allReviewsToDelete);
+
+               
+                    context.Products.Remove(context.Products.Find(p.Id)!);
+
+                    context.SaveChanges();
                 });
             }
         }

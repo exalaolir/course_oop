@@ -173,7 +173,9 @@ namespace course_oop.Presentation.ViewModels.SallersPart
             using AppContext context = new();
             Orders = [];
 
-            var data = context.Orders.Where(o => o.Status != OrderStatus.InCart ).ToList();
+            var shopId = context.Shops.FirstOrDefault(s => s.SallerId == _saller.Id)?.Id;
+
+            var data = context.Orders.Where(o => o.Status != OrderStatus.InCart && o.ShopId == shopId).ToList();
             data.ForEach(o => Orders.Add(new OrderCardViewModel(o, Rerender)));
         }
 
