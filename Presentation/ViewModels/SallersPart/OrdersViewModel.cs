@@ -121,7 +121,7 @@ namespace course_oop.Presentation.ViewModels.SallersPart
 
 
         public int Id => _order.Id;
-        public string Name => _product.Name;
+        public string Name => _order.Name;
         public Order Order => _order;
         public DateTime CreatedDate => _order.CreatedDate;
         public OrderStatus Status => _order.Status;
@@ -173,7 +173,7 @@ namespace course_oop.Presentation.ViewModels.SallersPart
             using AppContext context = new();
             Orders = [];
 
-            var data = context.Orders.Where(o => o.Status != OrderStatus.InCart).ToList();
+            var data = context.Orders.Where(o => o.Status != OrderStatus.InCart ).ToList();
             data.ForEach(o => Orders.Add(new OrderCardViewModel(o, Rerender)));
         }
 
