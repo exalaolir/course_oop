@@ -249,7 +249,7 @@ namespace course_oop.Presentation.ViewModels.Components
         {
             ImageBlocker = true;
 
-            _validFields = new bool[6];
+            _validFields = new bool[7];
             _loadingMsg = "Загрузка";
             _dataLoaded = true;
 
@@ -270,7 +270,7 @@ namespace course_oop.Presentation.ViewModels.Components
                 _category = null;
                 Images = [];
 
-                _validFields[2] = true;
+                _validFields[6] = true;
                 OnPropertyChanged(nameof(IsButtonEnabled));
             }
             else
@@ -284,11 +284,13 @@ namespace course_oop.Presentation.ViewModels.Components
                 _weightStr = product.Weight.ToString();
                 _weight = product.Weight;
 
+                ImageBlocker = false;
+
                 using AppContext appContext = new AppContext();
 
                 if (appContext.Orders.Where(o => o.ProductId == product.Id && (o.Status != OrderStatus.InCart || o.Status != OrderStatus.Delivered || o.Status != OrderStatus.Rejected)).Any())
                 {
-                    _validFields[2] = true;
+                    _validFields[6] = true;
                     OnPropertyChanged(nameof(IsButtonEnabled)); 
                 }
 
@@ -359,6 +361,9 @@ namespace course_oop.Presentation.ViewModels.Components
                     //repo.AddProduct(newProduct);
 
                     using AppContext context = new();
+
+                    context.ProductImages.RemoveRange(context.ProductImages.Where(i => i.ProductId == _id));
+
                     var pr = context.Products.Find(_id);
                     pr!.Name = _name;
                     pr.Description = _description;
@@ -372,7 +377,7 @@ namespace course_oop.Presentation.ViewModels.Components
                     //_id = shop.Id;
                 }
 
-                Navigator?.Navigate(new GoodsPage(_saller);
+                Navigator?.Navigate(new GoodsPage(_saller));
             });
         }
 
