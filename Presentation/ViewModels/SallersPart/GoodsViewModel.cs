@@ -29,6 +29,7 @@ namespace course_oop.Presentation.ViewModels.SallersPart
 
         private bool _isEditable;
 
+
         private Shop? _shop;
 
         public ICommand? CreatePage { get; }
@@ -45,6 +46,10 @@ namespace course_oop.Presentation.ViewModels.SallersPart
             using Repo repo = new();
 
             _shop = repo.GetShop(_saller.Id).Cast<Shop>().FirstOrDefault();
+
+            using AppContext appContext = new AppContext(); 
+
+           
 
             IsEditable = _shop != null;
 

@@ -243,6 +243,8 @@ namespace course_oop.Presentation.ViewModels.Components
 
         public ICommand RegisterCommand { get; }
 
+
+
         public ProductViewModel(Product? product, Saller saller, Shop shop)
         {
             ImageBlocker = true;
@@ -251,7 +253,7 @@ namespace course_oop.Presentation.ViewModels.Components
             _loadingMsg = "Загрузка";
             _dataLoaded = true;
 
-            _validFields[2] = true;
+            _validFields[3] = true;
 
             _saller = saller;
 
@@ -267,6 +269,9 @@ namespace course_oop.Presentation.ViewModels.Components
                 _count = 1;
                 _category = null;
                 Images = [];
+
+                _validFields[2] = true;
+                OnPropertyChanged(nameof(IsButtonEnabled));
             }
             else
             {
@@ -280,6 +285,12 @@ namespace course_oop.Presentation.ViewModels.Components
                 _weight = product.Weight;
 
                 using AppContext appContext = new AppContext();
+
+                if (appContext.Orders.Where(o => o.ProductId == product.Id && (o.Status != OrderStatus.InCart || o.Status != OrderStatus.Delivered || o.Status != OrderStatus.Rejected)).Any())
+                {
+                    _validFields[2] = true;
+                    OnPropertyChanged(nameof(IsButtonEnabled)); 
+                }
 
                 Images = [];
                 Category = appContext.Categories.Where(c => c.Id == product.CategotyId).Cast<Category>().First();
@@ -360,6 +371,8 @@ namespace course_oop.Presentation.ViewModels.Components
                     context.SaveChanges();
                     //_id = shop.Id;
                 }
+
+                Navigator?.Navigate(new GoodsPage(_saller);
             });
         }
 

@@ -59,8 +59,9 @@
                                         Margin="0,10,10,10"
                                         VerticalAlignment="Center"
                                         Command="{Binding DataContext.CreatePage, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                      
                                         CommandParameter="{Binding}"
-                                        Content="Происмотр и изменение" />
+                                        Content="Изменение" />
                                     <Button
                                         Style="{DynamicResource AccentButtonStyle}"
                                         Grid.Column="2"
