@@ -271,11 +271,22 @@ namespace course_oop.Presentation.ViewModels.SallersPart
                         }
                         else
                         {
-                            using Repo repo = new();
-                            repo.ClearImage(_id);
-                            repo.RemoveShop(_id);
-                            repo.AddShop(shop);
-                            _id = shop.Id;
+                            using AppContext context = new AppContext();
+
+                            var oldshop = context.Shops.Find(_id)!;
+                            context.Images.RemoveRange(context.Images.Where(i => i.ShopId == _id));
+
+                            oldshop.Name = Name;
+                            oldshop.Adress = adress.adress;
+                            oldshop.X = adress.x;
+                            oldshop.Y = adress.y;   
+                            oldshop.Description = Description;
+                            oldshop.SallerId = _saller.Id;
+                            oldshop.Images = shop.Images;
+
+                            _id = oldshop.Id;
+
+                            context.SaveChanges();
                         }
                     }
                 }
