@@ -10,16 +10,19 @@ namespace course_oop.Core.Services
 {
     internal sealed class ValidationServis()
     {
-        internal List<ValidatorResult> ValidateUser(User user)
+        internal static List<ValidatorResult> ValidateUser(User user, User? user2 = null)
         {
             using var _repo = new Repo();
             var users = _repo.GetAllUsers().Cast<User>()
                 .Union(_repo.GetSealers().Cast<User>())
                 .Union(_repo.GetCouriers().Cast<User>())
-                .Union(_repo.GetAdmins().Cast<User>());
+                .Union(_repo.GetAdmins().Cast<User>()).ToList();
 
             List<ValidatorResult> results = [];
             results.Capacity = Consts.ValidatorCapacity;
+
+            if(user2 != null) 
+                users = users.Where(u => u.Id != user2.Id).ToList();
 
             foreach (User registeredUser in users)
             {

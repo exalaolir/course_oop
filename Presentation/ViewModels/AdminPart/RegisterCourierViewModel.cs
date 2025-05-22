@@ -191,7 +191,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                 Veight = _veight == 0 ? 20 : _veight,
             };
 
-            var validResults = _validator.ValidateUser((User)courier);
+            var validResults = ValidationServis.ValidateUser((User)courier);
 
             foreach (var result in validResults)
             {

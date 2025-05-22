@@ -174,7 +174,7 @@ namespace course_oop.Presentation.ViewModels.Registration
                 Banned = false,
             };
 
-            var validResults = _mainViewModel.Validator.ValidateUser(user);
+            var validResults = ValidationServis.ValidateUser(user);
 
             foreach (var result in validResults)
             {

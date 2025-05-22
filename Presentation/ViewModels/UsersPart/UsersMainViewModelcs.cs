@@ -15,11 +15,11 @@ using course_oop.Presentation.Views.User;
 
 namespace course_oop.Presentation.ViewModels.UsersPart
 {
-    internal sealed class UsersMainViewModelcs : ViewModel, IMenu
+    public sealed class UsersMainViewModelcs : ViewModel, IMenu
     {
         private readonly ObservableCollection<MenuItemViewModel> _menuItems;
 
-        private readonly User _user;
+        public User _user;
         private readonly INavigation _navigator;
 
         public ObservableCollection<MenuItemViewModel> MenuItems
@@ -37,10 +37,8 @@ namespace course_oop.Presentation.ViewModels.UsersPart
             [
                 new("\xEA8A", "Главная", new Command(() => _navigator.Navigate(new HomePage(_user)))),
                   new("\xe8a9", "Каталог", new Command(() => _navigator.Navigate(new CatalogPage(_user)))),
-                new("\xec08", "Магазины", new Command(() => _navigator.Navigate(@"User\ShopsPage"))),
-                new("\xe7ee", "Профиль", new Command(() => _navigator.Navigate(@"User\InfoPage"))),
+                new("\xe7ee", "Профиль", new Command(() => _navigator.Navigate(new InfoPage(ref _user, this)))),
                 new("\xEB4E", "Корзина", new Command(() => _navigator.Navigate(new BasketPage(_user)))),
-                new("\xf8b0", "Настройки", new Command(() => _navigator.Navigate(@"User\SettingsPage"))),
                  new("\xede1", "Выход", new Command(() => vm.GoBack()))
 
             ];

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace course_oop.Presentation.ViewModels.Components
 {
-    internal sealed class MenuItemViewModel(string icon, string text, ICommand command) : Base.ViewModel
+    public sealed class MenuItemViewModel(string icon, string text, ICommand command) : Base.ViewModel
     {
         public string Icon { get; set; } = icon;
         public string Text { get; set; } = text;
