@@ -42,9 +42,9 @@ namespace course_oop.Core.Entities
 
         [StringLength(500)] public string? DeliveryAddress { get; set; }
 
-        [Required] public int ProductId { get; set; }
+        public int? ProductId { get; set; }
 
-        [ForeignKey("ProductId")] public virtual Product? Product { get; set; }
+        public virtual Product? Product { get; set; }
 
         [Required] public required int UserId { get; set; }
 
@@ -54,7 +54,10 @@ namespace course_oop.Core.Entities
         public double? X { get; set; }
         public double? Y { get; set; }
 
+        
+        public required string Name { get; set; }
 
+        public required decimal Price { get; set; }
       
         public int? CourierId { get; set; }
     }

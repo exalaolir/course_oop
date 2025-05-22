@@ -81,7 +81,7 @@ namespace course_oop
                 .HasMany(s => s.Products)
                 .WithOne(p => p.Shop)
                 .HasForeignKey(p => p.ShopId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Images)
@@ -89,24 +89,25 @@ namespace course_oop
                 .HasForeignKey(i => i.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+         
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Product)
                 .WithMany(p => p.Reviews)
                 .HasForeignKey(r => r.ProductId)
-                .OnDelete(DeleteBehavior.Restrict); // или Restrict в зависимости от требований
+                .OnDelete(DeleteBehavior.Cascade); // или Restrict в зависимости от требований
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Shop)
                 .WithMany(s => s.Reviews)
                 .HasForeignKey(r => r.ShopId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<Core.Entities.Order>()
                 .HasOne(o => o.Product)
                 .WithMany() // Если у Product нет коллекции Orders
                 .HasForeignKey(o => o.ProductId)
-                .OnDelete(DeleteBehavior.Restrict); // Или Cascade в зависимости от требований
+                .OnDelete(DeleteBehavior.NoAction); // Или Cascade в зависимости от требований
 
 
             modelBuilder.Entity<Product>().ToTable("Products");

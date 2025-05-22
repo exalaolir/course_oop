@@ -340,7 +340,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                 if (_order!.Order.CourierId == null)
                 {
                     return (bool)f[nameof(Courier.IsWork)]! == false &&
-                    (double)f[nameof(Courier.Veight)]! - (double)f[nameof(Courier.CurrentWeight)]! <= (double)Order!.Product.Weight;
+                    (double)f[nameof(Courier.Veight)]! - ((double?)f[nameof(Courier.CurrentWeight)] ?? 0) >= (double)Order!.Product.Weight;
                 }
                 else
                 {
@@ -392,7 +392,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
 
             var collection = appContext.Orders.Where(o =>
                 o.Status != OrderStatus.InCart && o.Status != OrderStatus.Delivered &&
-                o.Status != OrderStatus.Processing).ToList();
+                o.Status != OrderStatus.Processing && o.Status != OrderStatus.Rejected).ToList();
 
             collection.ForEach(o =>
             {

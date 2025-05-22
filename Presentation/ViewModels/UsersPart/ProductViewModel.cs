@@ -215,6 +215,8 @@ namespace course_oop.Presentation.ViewModels.UsersPart
                     Core.Entities.Order order = new()
                     {
                         CreatedDate = DateTime.Now,
+                        Name = _product.Name,
+                        Price = _product.Price, 
                         UserId = _user.Id,
                         ProductId = _product.Id,
                         ShopId = _shop.Id,
@@ -245,6 +247,8 @@ namespace course_oop.Presentation.ViewModels.UsersPart
                 {
                     CreatedDate = DateTime.Now,
                     UserId = _user.Id,
+                    Price = _product.Price,
+                    Name = _product.Name,   
                     ProductId = _product.Id,
                     ShopId = _shop.Id,
                     Status = OrderStatus.InCart,

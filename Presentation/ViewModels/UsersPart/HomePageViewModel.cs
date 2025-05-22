@@ -22,9 +22,9 @@ namespace course_oop.Presentation.ViewModels.UsersPart
 
         public OrderStatus Status => _order.Status;
 
-        public string Name => $"{_product.Name}";
+        public string Name => $"{_order.Name}";
 
-        public string Price => $"Цена: {string.Format("{0:C2}", _product.Price)}";
+        public string Price => $"Цена: {string.Format("{0:C2}", _order.Price)}";
 
         public string Time => $"Прибудет через: {_courier?.UserMinutes?.ToString() ?? "неизвестно"} минут";
 

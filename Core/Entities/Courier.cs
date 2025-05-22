@@ -17,8 +17,8 @@ namespace course_oop.Core.Entities
 
         public string? StatusMessage { get; set; }
 
-        public double? X { get; set; }
-        public double? Y { get; set; }
+        public double? X { get; set; } = 3067936.6575493305;
+        public double? Y { get; set; } = 7149649.28063618;
 
         public bool? IsWork { get; set; } = false;
 

@@ -29,7 +29,7 @@ namespace course_oop.Core.Entities
         [Range(0, double.MaxValue)]
         public decimal Weight { get; set; }
 
-        public int ShopId { get; set; }
+        public int? ShopId { get; set; }
 
         public virtual Shop? Shop { get; set; }
 

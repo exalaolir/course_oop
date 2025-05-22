@@ -74,7 +74,7 @@
                 ItemsSource="{Binding Categories}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type entities:Category}">
-                        <Expander>
+                        <Expander Margin="0, 0, 0, 10">
                             <Expander.Header>
                                 <DockPanel LastChildFill="False">
                                     <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" />

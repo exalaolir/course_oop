@@ -13,6 +13,8 @@ using course_oop.Core.Services;
 using course_oop.Infrastructure.Data.Repositories;
 using course_oop.Presentation.ViewModels.Base;
 using course_oop.Presentation.ViewModels.Commands;
+using Microsoft.EntityFrameworkCore;
+using Svg;
 using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace course_oop.Presentation.ViewModels.AdminPart
@@ -67,7 +69,7 @@ namespace course_oop.Presentation.ViewModels.AdminPart
 
         public ICommand DeleteRootCategoryCommand { get; }
 
-        public CategirisViewModel()
+        public CategirisViewModel ()
         {
             using Repo repository = new();
 
@@ -98,6 +100,8 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                     repo.AddCategory(category);
                     Categories.Add(category);
                 }
+                NewRootCategory = string.Empty;
+                SetValidationResults(true, nameof(NewRootCategory), []);
             });
 
             SetCategoryCommand = new Command(() =>
@@ -130,34 +134,106 @@ namespace course_oop.Presentation.ViewModels.AdminPart
                     repo.AddCategory(newSubCategory);
                     ChangeCollection(repo.GetCategories().Cast<Category>().Where(c => c.ParentId == null));
                 }
+
+                NewCategory = string.Empty;
+                SetValidationResults(true, nameof(NewCategory), []);
             });
 
             DeleteCategoryCommand = new Command<Category>(category =>
             {
-                foreach (var root in Categories)
-                {
-                    if (root.Children.Contains(category))
-                    {
-                        root.Children.Remove(category);
-                        using Repo repo = new();
-
-                        repo.RemoveCategory(category);
-                        ChangeCollection(repo.GetCategories().Cast<Category>().Where(c => c.ParentId == null));
-                        break;
-                    }
-                }
+                DeleteSubCategory(category);
             });
 
             DeleteRootCategoryCommand = new Command<Category>(category =>
             {
-                Categories.Remove(category);
-                using Repo repo = new();
+                
 
-                repo.RemoveCategory(category);
+                using AppContext context = new();
+
+                var subcategories = context.Categories.Where(c => c.ParentId == category.Id).Include(c => c.Parent).ToList();
+
+                foreach (var cat in subcategories)
+                {
+                    DeleteSubCategory(cat, context);
+                }
+
+                var shop = context.Shops.FirstOrDefault(s => s.Saller.CategoryId == category.Id);
+
+                if (shop != null)
+                    context.Shops.Remove(shop);
+
+               context.Sallers.Where(s => s.CategoryId == category.Id)
+                .ExecuteUpdate(s => s.SetProperty(s => s.Banned, true));
+
+                context.Categories.Remove(context.Categories.Find(category.Id)!);
+
+                context.SaveChanges();
+
+                Categories.Remove(category);
             });
         }
 
-        private void ChangeCollection(IEnumerable<Category> values)
+
+        private void DeleteSubCategory (Category category, AppContext? appcontext = null)
+        {
+            foreach (var root in Categories)
+            {
+                if (root.Children.Any(c => category.Id == c.Id))
+                {
+                    root.Children.Remove(category);
+                    using Repo repo = new();
+
+                    using AppContext context = appcontext == null ? new() : appcontext;
+                    var removedCategory = context.Categories.Find(category.Id)!;
+
+
+                    List<int?> nums = [];
+
+                    context.Orders.Where(o => o.Product!.CategotyId == removedCategory.Id).ToList().ForEach(i => nums.Add(i.CourierId));
+
+
+                    context.Orders.Where(o => o.Product!.CategotyId == removedCategory.Id)
+                    .ExecuteUpdate(o => o
+                        .SetProperty(x => x.Status, OrderStatus.Rejected)
+                        .SetProperty(x => x.CourierId, (int?)null)
+                      );
+
+                    double weight = (double)context.Products.Where(p => p.CategotyId == removedCategory.Id).Sum(p => p.Weight);
+
+                    context.Couriers.Where(p => nums.Contains(p.Id))
+                        .ExecuteUpdate(c => c.
+                        SetProperty(c => c.SallerMinutes, (int?)null)
+                        .SetProperty(c => c.UserMinutes, (int?)null)
+                        .SetProperty(c => c.CurrentWeight, c => c.CurrentWeight - weight)
+                        .SetProperty(c => c.IsWork, false));
+
+                    var productsInCategory = context.Products
+                        .Where(p => p.CategotyId == removedCategory.Id)
+                        .Include(p => p.Reviews) // Важно: подгружаем отзывы
+                        .ToList();
+
+                    // Собираем ВСЕ отзывы этих продуктов в один список
+                    var allReviewsToDelete = productsInCategory
+                        .SelectMany(p => p.Reviews) // "Разворачиваем" коллекции отзывов
+                        .ToList();
+
+                    // Удаляем все отзывы разом
+                    context.Rewiews.RemoveRange(allReviewsToDelete);
+
+                    context.Products.RemoveRange(context.Products.Where(p => p.CategotyId == removedCategory.Id));
+
+                    context.Categories.Remove(removedCategory);
+
+                    context.SaveChanges();
+
+                    ChangeCollection(repo.GetCategories().Cast<Category>().Where(c => c.ParentId == null));
+
+                    break;
+                }
+            }
+        }
+
+        private void ChangeCollection ( IEnumerable<Category> values )
         {
             Categories.Clear();
 
