@@ -49,25 +49,25 @@ namespace course_oop.Infrastructure.Data.Repositories
 
         internal User? FindUserByEmail(string email)
         {
-            var user = _appContext.Users.Where(e => e.Email == email);
+            var user = _appContext.Users.Where(e => e.Email == email && !e.Banned);
             return user.IsNullOrEmpty() ? null : user.First();
         }
 
         internal Saller? FindSallerByEmail(string email)
         {
-            var user = _appContext.Sallers.Where(e => e.Email == email);
+            var user = _appContext.Sallers.Where(e => e.Email == email && !e.Banned);
             return user.IsNullOrEmpty() ? null : user.First();
         }
 
         internal Admin? FindAdminByEmail(string email)
         {
-            var user = _appContext.Admins.Where(e => e.Email == email);
+            var user = _appContext.Admins.Where(e => e.Email == email && !e.Banned);
             return user.IsNullOrEmpty() ? null : user.First();
         }
 
         internal Courier? FindCurierByEmail(string email)
         {
-            var user = _appContext.Couriers.Where(e => e.Email == email);
+            var user = _appContext.Couriers.Where(e => e.Email == email && !e.Banned);
             return user.IsNullOrEmpty() ? null : user.First();
         }
 
