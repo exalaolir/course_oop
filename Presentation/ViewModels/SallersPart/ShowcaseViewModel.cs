@@ -216,7 +216,7 @@ namespace course_oop.Presentation.ViewModels.SallersPart
 
             Images.CollectionChanged += (s, e) =>
             {
-                ImageBlocker = Images.Count >= 6;
+                ImageBlocker = Images.Count < 6;
                 _validFields[3] = Images.Count == 6;
                 this.OnPropertyChanged(nameof(IsButtonEnabled));
                 ImageCounter = Images.Count;

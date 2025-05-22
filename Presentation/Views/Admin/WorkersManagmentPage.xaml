@@ -32,10 +32,6 @@
                         <MenuItem Header="Тип">
                             <MenuItem
                                 Command="{Binding ChangeType}"
-                                CommandParameter="user"
-                                Header="Пользователь" />
-                            <MenuItem
-                                Command="{Binding ChangeType}"
                                 CommandParameter="saller"
                                 Header="Продавец" />
                             <MenuItem
